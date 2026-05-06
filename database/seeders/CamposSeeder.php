@@ -68,6 +68,43 @@ class CamposSeeder extends Seeder
                     'orden' => 4,
                 ],
             ],
+            [
+                'campo_data' => [
+                    'formulario_id' => 1,
+                    'etiqueta' => 'Grado máximo de estudios',
+                    'nombre_campo' => 'grado_escolar',
+                    'tipo' => 'select',
+                    'requerido' => 1,
+                    'es_unico' => 0,
+                    'opciones' => [
+                        [
+                            'label' => 'Primaria',
+                            'value' => 'primaria'
+                        ],
+                        [
+                            'label' => 'Secundaria',
+                            'value' => 'secundaria'
+                        ],
+                        [
+                            'label' => 'Bachillerato',
+                            'value' => 'bachillerato'
+                        ],
+                        [
+                            'label' => 'Licenciatura',
+                            'value' => 'licenciatura'
+                        ],
+                        [
+                            'label' => 'Maestría',
+                            'value' => 'maestría'
+                        ],
+                        [
+                            'label' => 'Doctorado',
+                            'value' => 'doctorado'
+                        ],
+                    ],
+                    'orden' => 5,
+                ],
+            ],
         ];
 
         foreach ($campos as $campo) {

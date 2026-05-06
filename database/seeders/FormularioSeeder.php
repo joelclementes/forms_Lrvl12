@@ -18,8 +18,7 @@ class FormularioSeeder extends Seeder
                 'formulario_data' => [
                     'nombre' => 'Registro Mesas de trabajo',
                     'slug' => 'registro-mesa-trabajo-ley-intregracion-personas-discapacidad',
-                    'descripcion' => 'Registro de parcitipantes a las Mesas de trabajo para analizar la Ley para la
-                    Integración de las Personas con Discapacidad del Estado de Veracruz',
+                    'descripcion' => 'Registro de parcitipantes a las Mesas de trabajo para analizar la Ley para la Integración de las Personas con Discapacidad del Estado de Veracruz',
                     'configuracion' => [
                         'APP_LOGO' => 'https://legisver.gob.mx/img/LOGO_LXVII_SLOGAN.jpg',
                         'APP_SLOGAN' => 'Congreso del Estado de Veracruz',
