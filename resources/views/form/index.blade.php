@@ -16,25 +16,45 @@
 
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
 
-                <div class="flex items-center justify-between mb-4">
-                    <form method="GET" action="{{ route('formularios.index') }}" class="w-full max-w-md">
-                        <input
-                            type="text"
-                            name="buscar"
-                            value="{{ $buscar }}"
-                            placeholder="Buscar formulario..."
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        >
-                    </form>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+                <form method="GET"
+                    action="{{ route('formularios.index') }}"
+                    class="flex flex-col md:flex-row gap-2">
 
-                    <button
-                        type="button"
-                        onclick="document.getElementById('modalNuevoFormulario').classList.remove('hidden')"
-                        class="ml-4 rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+                    <input
+                        type="text"
+                        name="buscar"
+                        value="{{ $buscar }}"
+                        placeholder="Buscar formulario..."
+                        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     >
-                        Nuevo formulario
+
+                    <select
+                        name="per_page"
+                        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        onchange="this.form.submit()"
+                    >
+                        @foreach ([10, 20, 50, 100] as $cantidad)
+                            <option value="{{ $cantidad }}" @selected($perPage == $cantidad)>
+                                {{ $cantidad }} registros
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <button type="submit"
+                            class="rounded-md bg-gray-700 px-4 py-2 text-white hover:bg-gray-800">
+                        Buscar
                     </button>
-                </div>
+                </form>
+
+                <button
+                    type="button"
+                    onclick="document.getElementById('modalNuevoFormulario').classList.remove('hidden')"
+                    class="rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+                >
+                    Nuevo formulario
+                </button>
+            </div>
 
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -44,7 +64,9 @@
                                 <th class="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Nombre de la URL</th>
                                 <th class="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Descripción</th>
                                 <th class="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Activo</th>
-                                <th class="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase">Acciones</th>
+                                <th colspan="3" class="px-4 py-2 text-center text-xs font-semibold text-gray-600 uppercase">Acciones</th>
+                                {{-- <th class="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase">Acciones</th>
+                                <th class="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase">Acciones</th> --}}
                             </tr>
                         </thead>
 
@@ -80,7 +102,7 @@
                                         <a
                                             href="{{ route('formularios.edit', $formulario) }}"
                                             class="inline-flex items-center rounded-md bg-yellow-500 px-3 py-2 text-white hover:bg-yellow-600"
-                                            title="Editar"
+                                            title="Editar formulario"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="h-4 w-4"
@@ -93,7 +115,8 @@
                                                       d="M15.232 5.232l3.536 3.536M4 20h4.586a1 1 0 00.707-.293l10.414-10.414a1 1 0 000-1.414l-3.586-3.586a1 1 0 00-1.414 0L4.293 14.707A1 1 0 004 15.414V20z" />
                                             </svg>
                                         </a>
-
+                                    </td>
+                                    <td class="px-4 py-2 text-right">
                                         <a
                                             href="{{ route('formularios.configuracion', $formulario) }}"
                                             class="inline-flex items-center rounded-md bg-purple-600 px-3 py-2 text-white hover:bg-purple-700"
@@ -114,7 +137,8 @@
                                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
                                         </a>
-
+                                    </td>
+                                    <td class="px-4 py-2 text-right">
                                         <a
                                             href="{{ route('formularios.campos', $formulario) }}"
                                             class="inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"

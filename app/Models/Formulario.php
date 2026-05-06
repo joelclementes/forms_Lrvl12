@@ -24,4 +24,9 @@ class Formulario extends Model
     {
         return $this->hasMany(FormularioCampo::class)->orderBy('orden');
     }
+
+    public function respuestas()
+    {
+        return $this->hasMany(FormularioRespuesta::class);
+    }
 }

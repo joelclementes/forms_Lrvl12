@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\FormularioCampo;
 use Illuminate\Validation\Rule;
+use App\Models\FormularioRespuesta;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FormularioController extends Controller
 {
@@ -17,17 +19,25 @@ class FormularioController extends Controller
     {
         $buscar = $request->input('buscar');
 
+        $perPage = (int) $request->input('per_page', 10);
+
+        if (! in_array($perPage, [10, 20, 50, 100], true)) {
+            $perPage = 10;
+        }
+
         $formularios = Formulario::query()
             ->when($buscar, function ($query, $buscar) {
-                $query->where('nombre', 'like', "%{$buscar}%")
-                    ->orWhere('slug', 'like', "%{$buscar}%")
-                    ->orWhere('descripcion', 'like', "%{$buscar}%");
+                $query->where(function ($q) use ($buscar) {
+                    $q->where('nombre', 'like', "%{$buscar}%")
+                        ->orWhere('slug', 'like', "%{$buscar}%")
+                        ->orWhere('descripcion', 'like', "%{$buscar}%");
+                });
             })
             ->orderBy('id', 'desc')
-            ->paginate(10)
+            ->paginate($perPage)
             ->withQueryString();
 
-        return view('form.index', compact('formularios', 'buscar'));
+        return view('form.index', compact('formularios', 'buscar', 'perPage'));
     }
 
 
@@ -384,6 +394,109 @@ class FormularioController extends Controller
                     'orden' => $index + 1,
                 ]);
             });
+    }
+
+    public function indexRegistros()
+    {
+        $formularios = Formulario::withCount('respuestas')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('form.registros.index', compact('formularios'));
+    }
+
+    public function registros(Request $request, Formulario $formulario)
+    {
+        $perPage = (int) $request->input('per_page', 10);
+
+        if (! in_array($perPage, [10, 20, 50, 100], true)) {
+            $perPage = 10;
+        }
+
+        $buscar = $request->input('buscar');
+
+        $respuestas = $formulario->respuestas()
+            ->when($buscar, function ($query, $buscar) {
+                $query->where('datos', 'like', "%{$buscar}%")
+                    ->orWhere('ip', 'like', "%{$buscar}%")
+                    ->orWhere('user_agent', 'like', "%{$buscar}%");
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($perPage)
+            ->withQueryString();
+
+        $campos = $formulario->campos()->orderBy('orden')->get();
+
+        return view('form.registros.show', compact(
+            'formulario',
+            'respuestas',
+            'campos',
+            'buscar',
+            'perPage'
+        ));
+    }
+
+    public function exportarRegistros(Formulario $formulario): StreamedResponse
+    {
+        $campos = $formulario->campos()->orderBy('orden')->get();
+
+        $nombreArchivo = 'registros_' . $formulario->slug . '_' . now()->format('Ymd') . '.csv';
+
+        return response()->streamDownload(function () use ($formulario, $campos) {
+            $handle = fopen('php://output', 'w');
+
+            fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            $encabezados = ['ID', 'Fecha de registro'];
+
+            foreach ($campos as $campo) {
+                $encabezados[] = $campo->etiqueta;
+            }
+
+            $encabezados[] = 'IP';
+
+            fputcsv($handle, $encabezados);
+
+            $formulario->respuestas()
+                ->orderBy('id')
+                ->chunk(500, function ($respuestas) use ($handle, $campos) {
+                    foreach ($respuestas as $respuesta) {
+                        $datos = $respuesta->datos ?? [];
+
+                        $fila = [
+                            $respuesta->id,
+                            optional($respuesta->created_at)->format('Y-m-d H:i:s'),
+                        ];
+
+                        foreach ($campos as $campo) {
+                            $valor = $datos[$campo->nombre_campo] ?? '';
+
+                            if (is_array($valor)) {
+                                $valor = implode(', ', $valor);
+                            }
+
+                            $fila[] = $valor;
+                        }
+
+                        $fila[] = $respuesta->ip;
+
+                        fputcsv($handle, $fila);
+                    }
+                });
+
+            fclose($handle);
+        }, $nombreArchivo, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
+
+    public function resetearRegistros(Formulario $formulario)
+    {
+        $formulario->respuestas()->delete();
+
+        return redirect()
+            ->route('formularios.registros.show', $formulario)
+            ->with('success', 'Los registros del formulario fueron eliminados correctamente.');
     }
 
 }

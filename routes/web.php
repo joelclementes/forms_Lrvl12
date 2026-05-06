@@ -31,6 +31,11 @@ Route::middleware([
         Route::put('/{formulario}/campos/{campo}', [FormularioController::class, 'actualizarCampo'])->name('campos.update');
         Route::delete('/{formulario}/campos/{campo}', [FormularioController::class, 'eliminarCampo'])->name('campos.destroy');
         Route::post('/{formulario}/campos/ordenar', [FormularioController::class, 'ordenarCampos'])->name('campos.ordenar');
+
+        Route::get('/registros', [FormularioController::class, 'indexRegistros'])->name('registros.index');
+        Route::get('/{formulario}/registros', [FormularioController::class, 'registros'])->name('registros.show');
+        Route::get('/{formulario}/registros/exportar', [FormularioController::class, 'exportarRegistros'])->name('registros.exportar');
+        Route::delete('/{formulario}/registros/resetear', [FormularioController::class, 'resetearRegistros'])->name('registros.resetear');
     });
 
 
