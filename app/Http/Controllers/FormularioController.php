@@ -205,6 +205,7 @@ class FormularioController extends Controller
                 ]),
             ],
             'requerido' => ['nullable', 'boolean'],
+            'es_unico' => ['nullable', 'boolean'],
             'opciones_texto' => ['nullable', 'string'],
         ]);
 
@@ -214,6 +215,17 @@ class FormularioController extends Controller
             $request->input('opciones_texto'),
             $tipo
         );
+
+        if (
+            $request->boolean('es_unico') &&
+            in_array($tipo, ['checkbox', 'file', 'textarea'], true)
+        ) {
+            return back()
+                ->withErrors([
+                    'es_unico' => 'Este tipo de pregunta no puede marcarse como única.',
+                ])
+                ->withInput();
+        }
 
         if (in_array($tipo, ['select', 'radio', 'checkbox'], true) && empty($opciones)) {
             return back()
@@ -233,6 +245,7 @@ class FormularioController extends Controller
             'nombre_campo' => $nombreCampo,
             'tipo' => $tipo,
             'requerido' => $request->boolean('requerido'),
+            'es_unico' => $request->boolean('es_unico'),
             'opciones' => $opciones,
             'orden' => $orden,
         ]);
@@ -271,6 +284,7 @@ class FormularioController extends Controller
                 ]),
             ],
             'requerido' => ['nullable', 'boolean'],
+            'es_unico' => ['nullable', 'boolean'],
             'opciones_texto' => ['nullable', 'string'],
         ]);
 
@@ -280,6 +294,17 @@ class FormularioController extends Controller
             $request->input('opciones_texto'),
             $tipo
         );
+
+        if (
+            $request->boolean('es_unico') &&
+            in_array($tipo, ['checkbox', 'file', 'textarea'], true)
+        ) {
+            return back()
+                ->withErrors([
+                    'es_unico' => 'Este tipo de pregunta no puede marcarse como única.',
+                ])
+                ->withInput();
+        }
 
         if (in_array($tipo, ['select', 'radio', 'checkbox'], true) && empty($opciones)) {
             return back()
@@ -292,6 +317,7 @@ class FormularioController extends Controller
             'nombre_campo' => Str::slug($validated['nombre_campo'], '_'),
             'tipo' => $tipo,
             'requerido' => $request->boolean('requerido'),
+            'es_unico' => $request->boolean('es_unico'),
             'opciones' => $opciones,
         ]);
 

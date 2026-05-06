@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string("nombre_campo");
             $table->string("tipo");
             $table->boolean("requerido")->default(false);
+            $table->boolean('es_unico')->default(false);
             $table->json("opciones")->nullable();
             $table->integer("orden")->default(0);
 

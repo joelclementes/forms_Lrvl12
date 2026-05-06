@@ -14,6 +14,7 @@ class FormularioCampo extends Model
         'nombre_campo',
         'tipo',
         'requerido',
+        'es_unico',
         'opciones',
         'orden',
     ];
@@ -21,6 +22,7 @@ class FormularioCampo extends Model
     protected $casts = [
         'opciones' => 'array',
         'requerido' => 'boolean',
+        'es_unico' => 'boolean',
     ];
 
     public function formulario()

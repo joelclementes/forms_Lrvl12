@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("formulario_id");
             $table->json("datos");
-            $table->string("ip");
-            $table->string("user_agent");
+            $table->string("ip")->nullable();
+            $table->string("user_agent")->nullable();
 
             $table->timestamps();
 
