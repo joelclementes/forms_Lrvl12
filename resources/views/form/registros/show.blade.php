@@ -100,15 +100,30 @@
                                     </td>
 
                                     @foreach ($campos as $campo)
-                                        @php
+                                        {{-- @php
                                             $valor = $respuesta->datos[$campo->nombre_campo] ?? '';
                                             if (is_array($valor)) {
+                                                $valor = implode(', ', $valor);
+                                            }
+                                        @endphp --}}
+                                        @php
+                                            $valor = $respuesta->datos[$campo->nombre_campo] ?? '';
+
+                                            if ($campo->tipo !== 'file' && is_array($valor)) {
                                                 $valor = implode(', ', $valor);
                                             }
                                         @endphp
 
                                         <td class="px-4 py-2 text-sm text-gray-700">
-                                            {{ $valor }}
+                                            {{-- {{ $valor }} --}}
+                                            @if ($campo->tipo === 'file' && is_array($valor) && !empty($valor['ruta']))
+                                                <a href="{{ asset('storage/' . $valor['ruta']) }}" target="_blank"
+                                                    class="text-blue-600 hover:underline">
+                                                    {{ $valor['nombre_original'] ?? 'Ver archivo' }}
+                                                </a>
+                                            @else
+                                                {{ $valor }}
+                                            @endif
                                         </td>
                                     @endforeach
 
