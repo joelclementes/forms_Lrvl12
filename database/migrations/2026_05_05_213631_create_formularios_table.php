@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('formularios', function (Blueprint $table) {
             $table->id();
             $table->string("nombre");
-            $table->string("slug");
+            $table->string("slug")->unique();
             $table->string("descripcion");
+            $table->json("configuracion");
             $table->boolean("activo");
             $table->timestamps();
         });
