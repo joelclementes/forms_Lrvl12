@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Formulario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\FormularioCampo;
+use Illuminate\Validation\Rule;
 
 class FormularioController extends Controller
 {
@@ -112,61 +114,250 @@ class FormularioController extends Controller
     }
 
     public function configuracion(Formulario $formulario)
-{
-    $configuracion = $formulario->configuracion ?? $this->configuracionDefault();
+    {
+        $configuracion = $formulario->configuracion ?? $this->configuracionDefault();
 
-    return view('form.configuracion', compact('formulario', 'configuracion'));
-}
+        return view('form.configuracion', compact('formulario', 'configuracion'));
+    }
 
-public function actualizarConfiguracion(Request $request, Formulario $formulario)
-{
-    $validated = $request->validate([
-        'APP_LOGO' => ['nullable', 'url', 'max:500'],
-        'APP_SLOGAN' => ['nullable', 'string', 'max:255'],
-        'APP_URL_LINK' => ['nullable', 'url', 'max:500'],
-        'APP_TITLE_LINK' => ['nullable', 'string', 'max:255'],
+    public function actualizarConfiguracion(Request $request, Formulario $formulario)
+    {
+        $validated = $request->validate([
+            'APP_LOGO' => ['nullable', 'url', 'max:500'],
+            'APP_SLOGAN' => ['nullable', 'string', 'max:255'],
+            'APP_URL_LINK' => ['nullable', 'url', 'max:500'],
+            'APP_TITLE_LINK' => ['nullable', 'string', 'max:255'],
 
-        'HEADER_CONFIG.text_title_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-        'HEADER_CONFIG.text_footer_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-        'HEADER_CONFIG.type' => ['required', 'in:solid,gradient,multicolor'],
-        'HEADER_CONFIG.solid_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-        'HEADER_CONFIG.gradient_start' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-        'HEADER_CONFIG.gradient_end' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-        'HEADER_CONFIG.multicolor_1' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-        'HEADER_CONFIG.multicolor_2' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-        'HEADER_CONFIG.multicolor_3' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-        'HEADER_CONFIG.footer_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-    ]);
+            'HEADER_CONFIG.text_title_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'HEADER_CONFIG.text_footer_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'HEADER_CONFIG.type' => ['required', 'in:solid,gradient,multicolor'],
+            'HEADER_CONFIG.solid_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'HEADER_CONFIG.gradient_start' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'HEADER_CONFIG.gradient_end' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'HEADER_CONFIG.multicolor_1' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'HEADER_CONFIG.multicolor_2' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'HEADER_CONFIG.multicolor_3' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'HEADER_CONFIG.footer_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+        ]);
 
-    $formulario->update([
-        'configuracion' => $validated,
-    ]);
+        $formulario->update([
+            'configuracion' => $validated,
+        ]);
 
-    return redirect()
-        ->route('formularios.configuracion', $formulario)
-        ->with('success', 'Configuración actualizada correctamente.');
-}
+        return redirect()
+            ->route('formularios.configuracion', $formulario)
+            ->with('success', 'Configuración actualizada correctamente.');
+    }
 
-private function configuracionDefault(): array
-{
-    return [
-        'APP_LOGO' => 'https://legisver.gob.mx/img/LOGO_LXVII_SLOGAN.jpg',
-        'APP_SLOGAN' => 'Congreso del Estado de Veracruz',
-        'APP_URL_LINK' => 'https://legisver.gob.mx',
-        'APP_TITLE_LINK' => 'Aviso de privacidad',
+    private function configuracionDefault(): array
+    {
+        return [
+            'APP_LOGO' => 'https://legisver.gob.mx/img/LOGO_LXVII_SLOGAN.jpg',
+            'APP_SLOGAN' => 'Congreso del Estado de Veracruz',
+            'APP_URL_LINK' => 'https://legisver.gob.mx',
+            'APP_TITLE_LINK' => 'Aviso de privacidad',
 
-        'HEADER_CONFIG' => [
-            'text_title_color' => '#ffffff',
-            'text_footer_color' => '#ffbdd9',
-            'type' => 'multicolor',
-            'solid_color' => '#ffffff',
-            'gradient_start' => '#ece9e6',
-            'gradient_end' => '#ffffff',
-            'multicolor_1' => '#fe4875',
-            'multicolor_2' => '#8a75e5',
-            'multicolor_3' => '#3d75ed',
-            'footer_color' => '#6c143a',
-        ],
-    ];
-}
+            'HEADER_CONFIG' => [
+                'text_title_color' => '#ffffff',
+                'text_footer_color' => '#ffbdd9',
+                'type' => 'multicolor',
+                'solid_color' => '#ffffff',
+                'gradient_start' => '#ece9e6',
+                'gradient_end' => '#ffffff',
+                'multicolor_1' => '#fe4875',
+                'multicolor_2' => '#8a75e5',
+                'multicolor_3' => '#3d75ed',
+                'footer_color' => '#6c143a',
+            ],
+        ];
+    }
+
+    public function campos(Formulario $formulario)
+    {
+        $campos = $formulario->campos()->orderBy('orden')->get();
+
+        return view('form.campos', compact('formulario', 'campos'));
+    }
+
+    public function guardarCampo(Request $request, Formulario $formulario)
+    {
+        $validated = $request->validate([
+            'etiqueta' => ['required', 'string', 'max:255'],
+            'nombre_campo' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('formulario_campos', 'nombre_campo')
+                    ->where('formulario_id', $formulario->id),
+            ],
+            'tipo' => [
+                'required',
+                Rule::in([
+                    'text',
+                    'email',
+                    'number',
+                    'textarea',
+                    'select',
+                    'radio',
+                    'checkbox',
+                    'date',
+                    'file',
+                ]),
+            ],
+            'requerido' => ['nullable', 'boolean'],
+            'opciones_texto' => ['nullable', 'string'],
+        ]);
+
+        $tipo = $validated['tipo'];
+
+        $opciones = $this->normalizarOpciones(
+            $request->input('opciones_texto'),
+            $tipo
+        );
+
+        if (in_array($tipo, ['select', 'radio', 'checkbox'], true) && empty($opciones)) {
+            return back()
+                ->withErrors(['opciones_texto' => 'Este tipo de campo requiere al menos una opción.'])
+                ->withInput();
+        }
+
+        $orden = ((int) $formulario->campos()->max('orden')) + 1;
+
+        $nombreCampo = $validated['nombre_campo']
+            ? Str::slug($validated['nombre_campo'], '_')
+            : Str::slug($validated['etiqueta'], '_');
+
+        FormularioCampo::create([
+            'formulario_id' => $formulario->id,
+            'etiqueta' => $validated['etiqueta'],
+            'nombre_campo' => $nombreCampo,
+            'tipo' => $tipo,
+            'requerido' => $request->boolean('requerido'),
+            'opciones' => $opciones,
+            'orden' => $orden,
+        ]);
+
+        return redirect()
+            ->route('formularios.campos', $formulario)
+            ->with('success', 'Pregunta agregada correctamente.');
+    }
+
+    public function actualizarCampo(Request $request, Formulario $formulario, FormularioCampo $campo)
+    {
+        abort_unless($campo->formulario_id === $formulario->id, 404);
+
+        $validated = $request->validate([
+            'etiqueta' => ['required', 'string', 'max:255'],
+            'nombre_campo' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('formulario_campos', 'nombre_campo')
+                    ->where('formulario_id', $formulario->id)
+                    ->ignore($campo->id),
+            ],
+            'tipo' => [
+                'required',
+                Rule::in([
+                    'text',
+                    'email',
+                    'number',
+                    'textarea',
+                    'select',
+                    'radio',
+                    'checkbox',
+                    'date',
+                    'file',
+                ]),
+            ],
+            'requerido' => ['nullable', 'boolean'],
+            'opciones_texto' => ['nullable', 'string'],
+        ]);
+
+        $tipo = $validated['tipo'];
+
+        $opciones = $this->normalizarOpciones(
+            $request->input('opciones_texto'),
+            $tipo
+        );
+
+        if (in_array($tipo, ['select', 'radio', 'checkbox'], true) && empty($opciones)) {
+            return back()
+                ->withErrors(['opciones_texto' => 'Este tipo de campo requiere al menos una opción.'])
+                ->withInput();
+        }
+
+        $campo->update([
+            'etiqueta' => $validated['etiqueta'],
+            'nombre_campo' => Str::slug($validated['nombre_campo'], '_'),
+            'tipo' => $tipo,
+            'requerido' => $request->boolean('requerido'),
+            'opciones' => $opciones,
+        ]);
+
+        return redirect()
+            ->route('formularios.campos', $formulario)
+            ->with('success', 'Pregunta actualizada correctamente.');
+    }
+
+    public function eliminarCampo(Formulario $formulario, FormularioCampo $campo)
+    {
+        abort_unless($campo->formulario_id === $formulario->id, 404);
+
+        $campo->delete();
+
+        $this->reordenarCampos($formulario);
+
+        return redirect()
+            ->route('formularios.campos', $formulario)
+            ->with('success', 'Pregunta eliminada correctamente.');
+    }
+
+    public function ordenarCampos(Request $request, Formulario $formulario)
+    {
+        $validated = $request->validate([
+            'campos' => ['required', 'array'],
+            'campos.*' => ['integer', 'exists:formulario_campos,id'],
+        ]);
+
+        foreach ($validated['campos'] as $index => $campoId) {
+            FormularioCampo::where('id', $campoId)
+                ->where('formulario_id', $formulario->id)
+                ->update(['orden' => $index + 1]);
+        }
+
+        return response()->json([
+            'message' => 'Orden actualizado correctamente.',
+        ]);
+    }
+
+    private function normalizarOpciones(?string $opcionesTexto, string $tipo): ?array
+    {
+        if (! in_array($tipo, ['select', 'radio', 'checkbox'], true)) {
+            return null;
+        }
+
+        return collect(preg_split('/\r\n|\r|\n/', (string) $opcionesTexto))
+            ->map(fn ($opcion) => trim($opcion))
+            ->filter()
+            ->map(fn ($opcion) => [
+                'label' => $opcion,
+                'value' => Str::slug($opcion, '_'),
+            ])
+            ->values()
+            ->all();
+    }
+
+    private function reordenarCampos(Formulario $formulario): void
+    {
+        $formulario->campos()
+            ->orderBy('orden')
+            ->get()
+            ->each(function ($campo, $index) {
+                $campo->update([
+                    'orden' => $index + 1,
+                ]);
+            });
+    }
+
 }

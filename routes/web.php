@@ -26,12 +26,11 @@ Route::middleware([
         Route::get('/{formulario}/configuracion', [FormularioController::class, 'configuracion'])->name('configuracion');
         Route::put('/{formulario}/configuracion', [FormularioController::class, 'actualizarConfiguracion'])->name('configuracion.update');
 
-        // Route::get('/crear', [FormularioController::class, 'create'])->name('create');
-        // Route::post('/', [FormularioController::class, 'store'])->name('store');
-
-
-        // Route::delete('/{id}', [FormularioController::class, 'destroy'])->name('destroy');
-        // Route::post('/orden', [FormularioController::class, 'reorder'])->name('reorder');
+        Route::get('/{formulario}/campos', [FormularioController::class, 'campos'])->name('campos');
+        Route::post('/{formulario}/campos', [FormularioController::class, 'guardarCampo'])->name('campos.store');
+        Route::put('/{formulario}/campos/{campo}', [FormularioController::class, 'actualizarCampo'])->name('campos.update');
+        Route::delete('/{formulario}/campos/{campo}', [FormularioController::class, 'eliminarCampo'])->name('campos.destroy');
+        Route::post('/{formulario}/campos/ordenar', [FormularioController::class, 'ordenarCampos'])->name('campos.ordenar');
     });
 
 

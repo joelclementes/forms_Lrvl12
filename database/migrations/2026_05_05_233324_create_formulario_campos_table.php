@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('formulario_campos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("formulario_id");
+
+            $table->foreignId('formulario_id')->constrained('formularios')->cascadeOnDelete();
             $table->string("etiqueta");
             $table->string("nombre_campo");
             $table->string("tipo");
-            $table->string("requerido");
-            $table->json("opciones");
-            $table->integer("orden");
-            $table->timestamps();
+            $table->boolean("requerido")->default(false);
+            $table->json("opciones")->nullable();
+            $table->integer("orden")->default(0);
 
-            $table->foreign('formulario_id')->references('id')->on('formularios');
+            $table->timestamps();
         });
     }
 
