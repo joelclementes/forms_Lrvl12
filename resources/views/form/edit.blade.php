@@ -1,9 +1,15 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Editar formulario
-        </h2>
+        <div class="flex items-center justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Editar formulario
+            </h2>
+            <a href="{{ route('formularios.index') }}"
+                class="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100">
+                Volver
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-6">
@@ -20,25 +26,17 @@
                             Nombre
                         </label>
 
-                        <input
-                            type="text"
-                            name="nombre"
-                            value="{{ old('nombre', $formulario->nombre) }}"
-                            class="mt-1 w-full rounded-md border-gray-300 shadow-sm"
-                        >
+                        <input type="text" name="nombre" value="{{ old('nombre', $formulario->nombre) }}"
+                            class="mt-1 w-full rounded-md border-gray-300 shadow-sm">
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">
-                            Slug
+                            Nombre de la URL:
                         </label>
-
-                        <input
-                            type="text"
-                            name="slug"
-                            value="{{ old('slug', $formulario->slug) }}"
-                            class="mt-1 w-full rounded-md border-gray-300 shadow-sm"
-                        >
+                        <p class="text-sm text-gray-600">(Solo letras,números y guiones)</p>
+                        <input type="text" name="slug" value="{{ old('slug', $formulario->slug) }}"
+                            class="mt-1 w-full rounded-md border-gray-300 shadow-sm">
                     </div>
 
                     <div class="mb-4">
@@ -46,21 +44,12 @@
                             Descripción
                         </label>
 
-                        <textarea
-                            name="descripcion"
-                            rows="4"
-                            class="mt-1 w-full rounded-md border-gray-300 shadow-sm"
-                        >{{ old('descripcion', $formulario->descripcion) }}</textarea>
+                        <textarea name="descripcion" rows="4" class="mt-1 w-full rounded-md border-gray-300 shadow-sm">{{ old('descripcion', $formulario->descripcion) }}</textarea>
                     </div>
 
                     <div class="mb-4 flex items-center">
-                        <input
-                            type="checkbox"
-                            name="activo"
-                            value="1"
-                            @checked($formulario->activo)
-                            class="rounded border-gray-300"
-                        >
+                        <input type="checkbox" name="activo" value="1" @checked($formulario->activo)
+                            class="rounded border-gray-300">
 
                         <label class="ml-2 text-sm text-gray-700">
                             Activo
@@ -68,10 +57,8 @@
                     </div>
 
                     <div class="flex justify-end">
-                        <button
-                            type="submit"
-                            class="rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
-                        >
+                        <button type="submit"
+                            class="rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700">
                             Guardar cambios
                         </button>
                     </div>

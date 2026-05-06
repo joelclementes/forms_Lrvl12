@@ -12,7 +12,7 @@
             </div>
 
             <a href="{{ route('formularios.registros.index') }}"
-               class="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100">
+                class="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100">
                 Volver
             </a>
         </div>
@@ -30,19 +30,14 @@
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
 
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-                    <form method="GET"
-                          action="{{ route('formularios.registros.show', $formulario) }}"
-                          class="flex flex-col md:flex-row gap-2">
+                    <form method="GET" action="{{ route('formularios.registros.show', $formulario) }}"
+                        class="flex flex-col md:flex-row gap-2">
 
-                        <input type="text"
-                               name="buscar"
-                               value="{{ $buscar }}"
-                               placeholder="Buscar en registros..."
-                               class="rounded-md border-gray-300 shadow-sm">
+                        <input type="text" name="buscar" value="{{ $buscar }}"
+                            placeholder="Buscar en registros..." class="rounded-md border-gray-300 shadow-sm">
 
-                        <select name="per_page"
-                                class="rounded-md border-gray-300 shadow-sm"
-                                onchange="this.form.submit()">
+                        <select name="per_page" class="rounded-md border-gray-300 shadow-sm"
+                            onchange="this.form.submit()">
                             @foreach ([10, 20, 50, 100] as $cantidad)
                                 <option value="{{ $cantidad }}" @selected($perPage == $cantidad)>
                                     {{ $cantidad }} registros
@@ -50,30 +45,30 @@
                             @endforeach
                         </select>
 
-                        <button type="submit"
-                                class="rounded-md bg-gray-700 px-4 py-2 text-white hover:bg-gray-800">
+                        <button type="submit" class="rounded-md bg-gray-700 px-4 py-2 text-white hover:bg-gray-800">
                             Buscar
                         </button>
                     </form>
 
-                    <div class="flex gap-2">
-                        <a href="{{ route('formularios.registros.exportar', $formulario) }}"
-                           class="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700">
-                            Exportar CSV
-                        </a>
+                    @if ($respuestas->isNotEmpty())
+                        <div class="flex gap-2">
+                            <a href="{{ route('formularios.registros.exportar', $formulario) }}"
+                                class="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700">
+                                Exportar CSV
+                            </a>
 
-                        <form method="POST"
-                              action="{{ route('formularios.registros.resetear', $formulario) }}"
-                              onsubmit="return confirm('¿Seguro que deseas borrar todos los registros de este formulario? Esta acción no se puede deshacer.')">
-                            @csrf
-                            @method('DELETE')
+                            <form method="POST" action="{{ route('formularios.registros.resetear', $formulario) }}"
+                                onsubmit="return confirm('¿Seguro que deseas borrar todos los registros de este formulario? Esta acción no se puede deshacer.')">
+                                @csrf
+                                @method('DELETE')
 
-                            <button type="submit"
+                                <button type="submit"
                                     class="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700">
-                                Resetear formulario
-                            </button>
-                        </form>
-                    </div>
+                                    Resetear formulario
+                                </button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="overflow-x-auto">

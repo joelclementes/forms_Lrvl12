@@ -6,9 +6,18 @@
                     Preguntas del formulario
                 </h2>
 
-                <p class="text-sm text-gray-500 mt-1">
-                    {{ $formulario->nombre }}
-                </p>
+                <div class="flex">
+                    <strong>Título:</strong>
+                    <p class="text-sm text-gray-500 mt-1">
+                         {{ $formulario->nombre }}
+                    </p>
+                </div>
+                <div class="flex">
+                    <strong>Descripción:</strong>
+                    <p class="text-sm text-gray-500 mt-1">
+                         {{ $formulario->descripcion }}
+                    </p>
+                </div>
             </div>
 
             <a href="{{ route('formularios.index') }}"

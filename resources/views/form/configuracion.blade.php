@@ -1,11 +1,28 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Configuración del formulario: {{ $formulario->nombre }}
-        </h2>
-        <p>
-            Descripción: {{ $formulario->descripcion }}
-        </p>
+        <div class="flex items-center justify-between">
+            <div class="">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Configuración del formulario
+                </h2>
+                <div class="flex">
+                    <strong>Título:</strong>
+                    <p class="text-sm text-gray-500 mt-1">
+                         {{ $formulario->nombre }}
+                    </p>
+                </div>
+                <div class="flex">
+                    <strong>Descripción:</strong>
+                    <p class="text-sm text-gray-500 mt-1">
+                         {{ $formulario->descripcion }}
+                    </p>
+                </div>
+            </div>
+            <a href="{{ route('formularios.index') }}"
+                class="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100">
+                Volver
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-6">
@@ -77,8 +94,7 @@
                             Colores del encabezado
                         </h3>
 
-                        <div class="space-y-6">
-
+                        <div class="flex flex-col gap-3">
                             @php
                                 $header = $configuracion['HEADER_CONFIG'] ?? [];
                                 $tipo = old('HEADER_CONFIG.type', $header['type'] ?? 'multicolor');
@@ -100,7 +116,6 @@
                                 <label class="block text-sm font-medium text-gray-700">
                                     Tipo de fondo del encabezado
                                 </label>
-
                                 <select name="HEADER_CONFIG[type]"
                                     class="mt-1 w-full rounded-md border-gray-300 shadow-sm">
                                     <option value="solid" @selected($tipo === 'solid')>
@@ -115,7 +130,6 @@
                                         Multicolor
                                     </option>
                                 </select>
-
                                 @error('HEADER_CONFIG.type')
                                     <p class="text-sm text-red-600 mt-1">
                                         {{ $message }}
@@ -128,97 +142,75 @@
                                 <label class="block text-sm font-medium text-gray-700">
                                     Color sólido
                                 </label>
-
                                 <input type="color" name="HEADER_CONFIG[solid_color]"
                                     value="{{ old('HEADER_CONFIG.solid_color', $header['solid_color'] ?? '#ffffff') }}"
                                     class="mt-1 h-10 rounded-md border-gray-300">
                             </div>
 
                             {{-- Degradado --}}
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">
-                                        Degradado inicio
-                                    </label>
-
-                                    <input type="color" name="HEADER_CONFIG[gradient_start]"
-                                        value="{{ old('HEADER_CONFIG.gradient_start', $header['gradient_start'] ?? '#ece9e6') }}"
-                                        class="mt-1 h-10 w-full rounded-md border-gray-300">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">
+                                    Degradado
+                                </label>
+                                <div class="flex  gap-3">
+                                    <div>
+                                        <input type="color" name="HEADER_CONFIG[gradient_start]"
+                                            value="{{ old('HEADER_CONFIG.gradient_start', $header['gradient_start'] ?? '#ece9e6') }}"
+                                            class="mt-1 h-10 w-50 rounded-md border-gray-300">
+                                    </div>
+                                    <div>
+                                        <input type="color" name="HEADER_CONFIG[gradient_end]"
+                                            value="{{ old('HEADER_CONFIG.gradient_end', $header['gradient_end'] ?? '#ffffff') }}"
+                                            class="mt-1 h-10 w-50 rounded-md border-gray-300">
+                                    </div>
                                 </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">
-                                        Degradado final
-                                    </label>
-
-                                    <input type="color" name="HEADER_CONFIG[gradient_end]"
-                                        value="{{ old('HEADER_CONFIG.gradient_end', $header['gradient_end'] ?? '#ffffff') }}"
-                                        class="mt-1 h-10 w-full rounded-md border-gray-300">
-                                </div>
-
                             </div>
 
                             {{-- Multicolor --}}
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">
-                                        Multicolor 1
-                                    </label>
-
-                                    <input type="color" name="HEADER_CONFIG[multicolor_1]"
-                                        value="{{ old('HEADER_CONFIG.multicolor_1', $header['multicolor_1'] ?? '#fe4875') }}"
-                                        class="mt-1 h-10 w-full rounded-md border-gray-300">
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">
+                                    Multicolor
+                                </label>
+                                <div class="flex gap-3">
+                                    <div>
+                                        <input type="color" name="HEADER_CONFIG[multicolor_1]"
+                                            value="{{ old('HEADER_CONFIG.multicolor_1', $header['multicolor_1'] ?? '#fe4875') }}"
+                                            class="mt-1 h-10 w-50 rounded-md border-gray-300">
+                                    </div>
+                                    <div>
+                                        <input type="color" name="HEADER_CONFIG[multicolor_2]"
+                                            value="{{ old('HEADER_CONFIG.multicolor_2', $header['multicolor_2'] ?? '#8a75e5') }}"
+                                            class="mt-1 h-10 w-50 rounded-md border-gray-300">
+                                    </div>
+                                    <div>
+                                        <input type="color" name="HEADER_CONFIG[multicolor_3]"
+                                            value="{{ old('HEADER_CONFIG.multicolor_3', $header['multicolor_3'] ?? '#3d75ed') }}"
+                                            class="mt-1 h-10 w-50 rounded-md border-gray-300">
+                                    </div>
                                 </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">
-                                        Multicolor 2
-                                    </label>
-
-                                    <input type="color" name="HEADER_CONFIG[multicolor_2]"
-                                        value="{{ old('HEADER_CONFIG.multicolor_2', $header['multicolor_2'] ?? '#8a75e5') }}"
-                                        class="mt-1 h-10 w-full rounded-md border-gray-300">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">
-                                        Multicolor 3
-                                    </label>
-
-                                    <input type="color" name="HEADER_CONFIG[multicolor_3]"
-                                        value="{{ old('HEADER_CONFIG.multicolor_3', $header['multicolor_3'] ?? '#3d75ed') }}"
-                                        class="mt-1 h-10 w-full rounded-md border-gray-300">
-                                </div>
-
                             </div>
 
                             {{-- Footer --}}
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-3">
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">
-                                        Color del texto del footer
+                                        Color de texto del footer
                                     </label>
-
                                     <input type="color" name="HEADER_CONFIG[text_footer_color]"
                                         value="{{ old('HEADER_CONFIG.text_footer_color', $header['text_footer_color'] ?? '#ffbdd9') }}"
-                                        class="mt-1 h-10 w-full rounded-md border-gray-300">
+                                        class="mt-1 h-10 w-50 rounded-md border-gray-300">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">
-                                        Color del footer
+                                        Color de fondo del footer
                                     </label>
-
                                     <input type="color" name="HEADER_CONFIG[footer_color]"
                                         value="{{ old('HEADER_CONFIG.footer_color', $header['footer_color'] ?? '#6c143a') }}"
-                                        class="mt-1 h-10 w-full rounded-md border-gray-300">
+                                        class="mt-1 h-10 w-50 rounded-md border-gray-300">
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
 
