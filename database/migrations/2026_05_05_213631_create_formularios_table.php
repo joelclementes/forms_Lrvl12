@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("nombre");
             $table->string("slug")->unique();
-            $table->string("descripcion");
+            $table->string("descripcion")->nullable();
             $table->json("configuracion");
             $table->boolean("activo");
             $table->timestamps();

@@ -51,7 +51,7 @@ class FormularioController extends Controller
         $validated = $request->validate([
             'nombre' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:formularios,slug'],
-            'descripcion' => ['nullable', 'string', 'max:255'],
+            'descripcion' => ['required', 'string', 'max:255'],
             'activo' => ['nullable', 'boolean'],
         ]);
 
@@ -98,7 +98,7 @@ class FormularioController extends Controller
                 'max:255',
                 'unique:formularios,slug,' . $formulario->id,
             ],
-            'descripcion' => ['nullable', 'string', 'max:255'],
+            'descripcion' => ['required', 'string', 'max:255'],
             'activo' => ['nullable', 'boolean'],
         ]);
 
@@ -169,15 +169,15 @@ class FormularioController extends Controller
 
             'HEADER_CONFIG' => [
                 'text_title_color' => '#ffffff',
-                'text_footer_color' => '#ffbdd9',
+                'text_footer_color' => '#ffffff',
                 'type' => 'multicolor',
                 'solid_color' => '#ffffff',
-                'gradient_start' => '#ece9e6',
-                'gradient_end' => '#ffffff',
-                'multicolor_1' => '#fe4875',
-                'multicolor_2' => '#8a75e5',
-                'multicolor_3' => '#3d75ed',
-                'footer_color' => '#6c143a',
+                'gradient_start' => '#d1d1d1',
+                'gradient_end' => '#9e9e9e',
+                'multicolor_1' => '#d1d1d1',
+                'multicolor_2' => '#9e9e9e',
+                'multicolor_3' => '#545454',
+                'footer_color' => '#090b0c',
             ],
         ];
     }
